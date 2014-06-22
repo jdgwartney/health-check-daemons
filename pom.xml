@@ -4,15 +4,122 @@
 
   <groupId>com.boundary</groupId>
   <artifactId>test-daemons</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <version>0.1.00</version>
+  <packaging>uexe</packaging>
 
-  <name>test-daemons</name>
+  <name>daemon</name>
   <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <rpm-maven-plugin-version>2.0.1</rpm-maven-plugin-version>
+    <rpm-user-name>root</rpm-user-name>
+    <rpm-group-name>root</rpm-group-name>
+    <rpm-app-dir>/usr/share/besdk</rpm-app-dir>
+    <rpm-bin-dir>/usr/bin</rpm-bin-dir>
+    <rpm-etc-dir>/etc</rpm-etc-dir>
+    <rpm-jar-dir>/usr/share/besdk/lib</rpm-jar-dir>
+    <rpm-man-dir>/usr/share/man</rpm-man-dir>
+    <rpm-initd-dir>/etc/init.d</rpm-initd-dir>
   </properties>
+
+  <build>
+  <plugins>
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>rpm-maven-plugin</artifactId>
+          <version>${rpm-maven-plugin-version}</version>
+          <configuration>
+              <license> Apache License Version 2.0, January 2004</license>
+              <distribution>Boundary,Inc 2014</distribution>
+              <group>Application/Collectors</group>
+              <needarch>true</needarch>
+              <packager>Boundary, Inc.</packager>
+              <defineStatements>
+                  <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+              </defineStatements>
+              <mappings>
+                  <mapping>
+                      <directory>${rpm-bin-dir}</directory>
+                      <directoryIncluded>false</directoryIncluded>
+                      <filemode>755</filemode>
+                      <username>${rpm-user-name}</username>
+                      <groupname>${rpm-group-name}</groupname>
+                      <sources>
+                          <source>
+                              <location>src/main/scripts</location>
+                              <includes>
+                                  <include>install_daemons.sh</include>
+                              </includes>
+                          </source>
+                      </sources>
+                  </mapping>
+             </mappings>
+             <preinstallScriptlet>
+                 <script>echo "installing now"</script>
+             </preinstallScriptlet>
+          </configuration>
+      </plugin>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>native-maven-plugin</artifactId>
+	<version>1.0-alpha-8</version>
+        <extensions>true</extensions>
+        <configuration>
+            <sources>
+                <source>
+                    <directory>src/main/c</directory>
+                    <fileNames>
+                       <fileName>daemon.c</fileName>
+                    </fileNames>
+                </source>
+            </sources>
+        </configuration>
+      </plugin>
+      <plugin>
+	<groupId>com.googlecode.velocity-maven-plugin</groupId>
+	<artifactId>velocity-maven-plugin</artifactId>
+	<version>1.0.0</version>
+        <configuration>
+            <outputDirectory>${project.build.directory}/velocity</outputDirectory>
+            <removeExtension>true</removeExtension>
+            <templateFiles>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.vm</include>
+                </includes>
+            </templateFiles>
+            <templateValues>
+                <daemon>daemon</daemon>
+            </templateValues>
+        </configuration>
+     </plugin>
+<!--
+     <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+            <execution>
+                <id>copy-resources</id>
+                <phase>validate</phase>
+                <goals>
+                   <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                    <outputDirectory>${basedir}/target/extra-resources</outputDirectory>
+                    <resources>          
+                       <resource>
+                          <directory>src/non-packaged-resources</directory>
+                              <filtering>true</filtering>
+                       </resource>
+                    </resources>              
+                </configuration>            
+            </execution>
+        </executions>
+     </plugin>
+-->
+  </plugins>
+  </build>
 
   <dependencies>
     <dependency>
