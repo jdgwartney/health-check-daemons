@@ -32,7 +32,7 @@
 
     <rpm-user-name>root</rpm-user-name>
     <rpm-group-name>root</rpm-group-name>
-    <rpm-bin-dir>/usr/bin</rpm-bin-dir>
+    <rpm-bin-dir>/bin</rpm-bin-dir>
     <rpm-etc-dir>/etc</rpm-etc-dir>
     <rpm-usr-share-dir>/usr/share/${project.name}</rpm-usr-share-dir>
     <rpm-initd-dir>/etc/init.d</rpm-initd-dir>
