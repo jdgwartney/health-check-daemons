@@ -1,0 +1,50 @@
+#!/bin/bash
+
+PROVISION_DIR=/user/share/daemon
+
+replaceDaemon() {
+  typeset -r name=$1
+  sed -e"s/@@DAEMON@@/$name/g" 
+}
+
+AddService()
+{
+    typeset -r service_name=$1   
+    typeset -r service_port=$2
+    typeset -r initd_file="/etc/init.d/$name"
+
+    # Install the binary
+    cp /bin/daemon /bin/$name && chmod 744 /bin/$name
+
+    # Add service file in init.d
+    cat $PROVISION_DIR/daemon-template.sh | replaceDaemon "$service_name" > "$initd_file"
+
+    # Change permissions
+    chmod 744 "$initd_file"
+
+    # Create the configuration file
+    echo "port: $service_port" > "/etc/$name" && chmod 744 "/etc/$name"
+
+    # Add service configuration
+    chkconfig $name on
+
+    # Start the service
+    service $name start
+}
+
+Usage()
+{
+    echo "usage: $(basename $0) service-name port"
+}
+
+Main()
+{
+    if [ $# -ne 2 ]
+    then
+      Usage
+      exit 1
+    fi
+    AddService "$1" "$2"
+}
+
+Main $*

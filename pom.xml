@@ -15,10 +15,10 @@
     <rpm-maven-plugin-version>2.0.1</rpm-maven-plugin-version>
     <rpm-user-name>root</rpm-user-name>
     <rpm-group-name>root</rpm-group-name>
-    <rpm-app-dir>/usr/share/besdk</rpm-app-dir>
     <rpm-bin-dir>/usr/bin</rpm-bin-dir>
     <rpm-etc-dir>/etc</rpm-etc-dir>
-    <rpm-jar-dir>/usr/share/besdk/lib</rpm-jar-dir>
+    <rpm-usr-share-dir>/usr/share/${project.name}</rpm-usr-share-dir>
+    <rpm-usr-share-lib-dir>/usr/share/${project.name}/lib</rpm-usr-share-lib-dir>
     <rpm-man-dir>/usr/share/man</rpm-man-dir>
     <rpm-initd-dir>/etc/init.d</rpm-initd-dir>
   </properties>
@@ -49,6 +49,7 @@
                           <source>
                               <location>src/main/scripts</location>
                               <includes>
+                                  <include>install_daemons.sh</include>
                                   <include>install_daemons.sh</include>
                               </includes>
                           </source>
