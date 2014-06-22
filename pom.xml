@@ -3,12 +3,25 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.boundary</groupId>
-  <artifactId>test-daemons</artifactId>
+  <artifactId>health-check-daemons</artifactId>
   <version>0.1.00</version>
   <packaging>uexe</packaging>
 
   <name>daemon</name>
-  <url>http://maven.apache.org</url>
+  <description>Contains a daemon that can be used to test health checks against, such as ping, socket check, SSH check.</description>
+  <url>https://github.com/boundary/boundary-sdk</url>
+  <licenses>
+      <license>
+          <name>Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>manual</distribution>
+          <comments>A business-friendly OSS license</comments>
+      </license>
+  </licenses>
+  <organization>
+      <name>Boundary,Inc.</name>
+      <url>http://www.boundary.com</url>
+  </organization>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,6 +46,14 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>rpm-maven-plugin</artifactId>
           <version>${rpm-maven-plugin-version}</version>
+          <executions>
+              <execution>
+                  <id>generate-rpm</id>
+                  <goals>
+                      <goal>rpm</goal>
+                  </goals>
+              </execution>
+          </executions>
           <configuration>
               <license> Apache License Version 2.0, January 2004</license>
               <distribution>Boundary,Inc 2014</distribution>
@@ -42,6 +63,7 @@
               <defineStatements>
                   <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
               </defineStatements>
+<!--              <prefix>/opt/health-check-daemons</prefix> -->
               <mappings>
                   <mapping>
                       <directory>${rpm-bin-dir}</directory>
@@ -51,7 +73,7 @@
                       <groupname>${rpm-group-name}</groupname>
                       <sources>
                           <source>
-                              <location>${project.build}/${project.artifactId}.uexe</location>
+                              <location>${project.build.directory}/${project.artifactId}.uexe</location>
                               <destination>${project.name}</destination>
                           </source>
                       </sources>
