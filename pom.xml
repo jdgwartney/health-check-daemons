@@ -12,7 +12,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <native-maven-plugin-version>1.0-alpha-8</native-maven-plugin-version>
     <rpm-maven-plugin-version>2.0.1</rpm-maven-plugin-version>
+    <velocity-maven-plugin-version>1.0.0</velocity-maven-plugin-version>
+
     <rpm-user-name>root</rpm-user-name>
     <rpm-group-name>root</rpm-group-name>
     <rpm-bin-dir>/usr/bin</rpm-bin-dir>
@@ -47,11 +51,8 @@
                       <groupname>${rpm-group-name}</groupname>
                       <sources>
                           <source>
-                              <location>src/main/scripts</location>
-                              <includes>
-                                  <include>install_daemons.sh</include>
-                                  <include>install_daemons.sh</include>
-                              </includes>
+                              <location>${project.build}/${project.artifactId}.uexe</location>
+                              <destination>${project.name}</destination>
                           </source>
                       </sources>
                   </mapping>
@@ -64,7 +65,7 @@
       <plugin>
 	<groupId>org.codehaus.mojo</groupId>
 	<artifactId>native-maven-plugin</artifactId>
-	<version>1.0-alpha-8</version>
+	<version>${native-maven-plugin-version}</version>
         <extensions>true</extensions>
         <configuration>
             <sources>
@@ -80,9 +81,17 @@
       <plugin>
 	<groupId>com.googlecode.velocity-maven-plugin</groupId>
 	<artifactId>velocity-maven-plugin</artifactId>
-	<version>1.0.0</version>
+	<version>${velocity-maven-plugin-version}</version>
+        <executions>
+            <execution>
+                <id>copy-resources</id>
+                <phase>validate</phase>
+                <goals>
+                   <goal>velocity</goal>
+                </goals>
+            </execution>
+        </executions>
         <configuration>
-            <outputDirectory>${project.build.directory}/velocity</outputDirectory>
             <removeExtension>true</removeExtension>
             <templateFiles>
                 <directory>src/main/resources</directory>
@@ -122,12 +131,4 @@
   </plugins>
   </build>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 </project>
