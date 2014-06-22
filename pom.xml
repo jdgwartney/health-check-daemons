@@ -35,8 +35,6 @@
     <rpm-bin-dir>/usr/bin</rpm-bin-dir>
     <rpm-etc-dir>/etc</rpm-etc-dir>
     <rpm-usr-share-dir>/usr/share/${project.name}</rpm-usr-share-dir>
-    <rpm-usr-share-lib-dir>/usr/share/${project.name}/lib</rpm-usr-share-lib-dir>
-    <rpm-man-dir>/usr/share/man</rpm-man-dir>
     <rpm-initd-dir>/etc/init.d</rpm-initd-dir>
   </properties>
 
@@ -77,10 +75,33 @@
                           </source>
                       </sources>
                   </mapping>
+                  <mapping>
+                      <directory>${rpm-etc-dir}</directory>
+                      <directoryIncluded>false</directoryIncluded>
+                      <filemode>744</filemode>
+                      <username>${rpm-user-name}</username>
+                      <groupname>${rpm-group-name}</groupname>
+                      <sources>
+                          <source>
+                              <location>${basedir}/src/main/resources/${project.name}</location>
+                              <destination>${project.name}</destination>
+                          </source>
+                      </sources>
+                  </mapping>
+                  <mapping>
+                      <directory>${rpm-initd-dir}</directory>
+                      <directoryIncluded>false</directoryIncluded>
+                      <filemode>744</filemode>
+                      <username>${rpm-user-name}</username>
+                      <groupname>${rpm-group-name}</groupname>
+                      <sources>
+                          <source>
+                              <location>${project.build.directory}/${project.name}.vm</location>
+                              <destination>${project.name}</destination>
+                          </source>
+                      </sources>
+                  </mapping>
              </mappings>
-             <preinstallScriptlet>
-                 <script>echo "installing now"</script>
-             </preinstallScriptlet>
           </configuration>
       </plugin>
       <plugin>
